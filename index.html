@@ -23,7 +23,16 @@
         .title-bar {
             background: linear-gradient(90deg, #000080, #1084d0); color: white;
             padding: 4px 10px; font-weight: bold; display: flex; justify-content: space-between;
+            align-items: center;
         }
+
+        /* TASTO AUDIO STILE WIN95 */
+        #audio-toggle {
+            background: #c0c0c0; color: #000; border: 2px outset #fff;
+            font-size: 10px; padding: 2px 6px; cursor: pointer; font-family: sans-serif;
+            font-weight: bold;
+        }
+        #audio-toggle:active { border-style: inset; }
 
         /* AREA ANIMAZIONE E CREW */
         #animation-zone {
@@ -87,24 +96,47 @@
 </head>
 <body>
 
+<audio id="bg-music" loop>
+    <source src="jazzhighlanders 8bit [2026-04-22 140712].wav" type="audio/wav">
+</audio>
+
 <div id="os-window">
     <div class="title-bar">
         <span>Guest_Sweeper_v4.exe - <span id="rem">10</span> DA TROVARE</span>
-        <span>[?][X]</span>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <button id="audio-toggle" onclick="toggleMusic()">🎵 PLAY</button>
+            <span>[?][X]</span>
+        </div>
     </div>
 
     <div id="animation-zone">
         <div id="mclovin"></div>
-        </div>
+    </div>
 
     <div id="status-bar">
-        <p id="msg" style="margin:0;"><b>MCLOVIN:</b> "Raduna la crew cliccando sui glitch. Non farli aspettare!"</p>
+        <p id="msg" style="margin:0;"><b>MCLOVIN:</b> "Trova nel campo i guest del 18 giugno!"</p>
     </div>
 
     <div id="grid-container"></div>
 </div>
 
 <script>
+    // GESTIONE MUSICA
+    const music = document.getElementById('bg-music');
+    const audioBtn = document.getElementById('audio-toggle');
+    
+    function toggleMusic() {
+        if (music.paused) {
+            music.play();
+            audioBtn.innerText = "🎵 STOP";
+            audioBtn.style.borderStyle = "inset";
+        } else {
+            music.pause();
+            audioBtn.innerText = "🎵 PLAY";
+            audioBtn.style.borderStyle = "outset";
+        }
+    }
+
     const guestList = [
         { n: "Arya", i: "🌬️" }, { n: "Carlo Corallo", i: "🪸" },
         { n: "Daykoda", i: "🎛️" }, { n: "Jack the smoker", i: "🚬" },
@@ -179,11 +211,9 @@
             found++;
             remDisplay.innerText = totalGuests - found;
             
-            // Animazione McLovin
             mclovin.classList.add('pokemon-jump');
             setTimeout(() => mclovin.classList.remove('pokemon-jump'), 500);
 
-            // AGGIUNGE GUEST ALLO SCHERMO PER SEMPRE
             const member = document.createElement('div');
             member.className = 'guest-member';
             member.innerHTML = cellData.icon;
